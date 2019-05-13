@@ -57,8 +57,8 @@ class Method:
 
         self.parameters: Dict = my_params(self.schema['parameters'])
         if kwargs:
-            print('the kw args')
-            print(kwargs)
+            # print('the kw args')
+            # print(kwargs)
 
             self.add_params(**kwargs)
         self.results: List = []
@@ -108,8 +108,11 @@ class Method:
                 # print('p', p)
                 # print(self.parameters[p])
                 if 'enum' in self.parameters[p].keys():
+                    # print('data', set(self.params[p]))
+                    # print('enums',set(self.parameters[p]['enum']))
+
                     if not set(self.params[p]).issubset(set(self.parameters[p]['enum'])):
-                    # if not self.params[p] in self.parameters[p]['enum']:  # what about multiple values?
+                        # if not self.params[p] in self.parameters[p]['enum']:  # what about multiple values?
                         # print('subsetting', set(self.params[p]).issubset(set(self.parameters[p]['enum'])))
                         print(f'STOPPED: {self.params[p]} is not valid value for: {p}')
                         exit()
