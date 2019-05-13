@@ -57,6 +57,9 @@ class Method:
 
         self.parameters: Dict = my_params(self.schema['parameters'])
         if kwargs:
+            print('the kw args')
+            print(kwargs)
+
             self.add_params(**kwargs)
         self.results: List = []
 
@@ -66,7 +69,7 @@ class Method:
         # this function pulls out all those path stings in the params
         # form params need to be sent as a dict but checked against the docs
         # this function converts the params into checkable form
-        print('adding params')
+        # print('adding params')
         for x in traverse(kwargs):
             self.params.update(pathify(x[0], x[1]))
 
@@ -92,6 +95,8 @@ class Method:
         # print('-' * 48)
         # print(self.params)
         # print('-' * 48)
+        # print(self.params)
+
         required_params: Set = set(map(lambda y: y['name'],
                                        filter(lambda x: x['required'] is True,
                                               self.schema['parameters'])))
@@ -103,8 +108,10 @@ class Method:
                 # print('p', p)
                 # print(self.parameters[p])
                 if 'enum' in self.parameters[p].keys():
-                    if not self.params[p] in self.parameters[p]['enum']:
-                        print(f'STOPPED: [{self.params[p]}] is not valid value for [{p}]')
+                    if not set(self.params[p]).issubset(set(self.parameters[p]['enum'])):
+                    # if not self.params[p] in self.parameters[p]['enum']:  # what about multiple values?
+                        # print('subsetting', set(self.params[p]).issubset(set(self.parameters[p]['enum'])))
+                        print(f'STOPPED: {self.params[p]} is not valid value for: {p}')
                         exit()
                 pname = p
                 if self.parameters[p]['type'] == 'array':
@@ -136,7 +143,8 @@ if __name__ == '__main__':
     # methodname = 'create_user'
 
     # param: Dict[str, Any] = dict(course_id=25606)
-    param = {'account': {'settings': {'restrict_student_past_view': {'locked': True, 'value': True}, 'restrict_student_future_view': {'locked': True, 'value': True}, 'lock_all_announcements': {'locked': True, 'value': True}, 'restrict_student_future_listing': {'locked': True, 'value': True}}, 'services': {}, 'default_user_storage_quota_mb': 1, 'default_time_zone': 's', 'default_group_storage_quota_mb': 1, 'sis_account_id': 's', 'name': 's', 'default_storage_quota_mb': 1}, 'id': 6}
+    param = {'account': {'settings': {'restrict_student_past_view': {'locked': True, 'value': True}, 'restrict_student_future_view': {'locked': True, 'value': True}, 'lock_all_announcements': {'locked': True, 'value': True}, 'restrict_student_future_listing': {
+        'locked': True, 'value': True}}, 'services': {}, 'default_user_storage_quota_mb': 1, 'default_time_zone': 's', 'default_group_storage_quota_mb': 1, 'sis_account_id': 's', 'name': 's', 'default_storage_quota_mb': 1}, 'id': 6}
 
     method = Method(methodname, **param)
 
