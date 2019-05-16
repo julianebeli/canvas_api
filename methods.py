@@ -110,12 +110,19 @@ class Method:
                 if 'enum' in self.parameters[p].keys():
                     # print('data', set(self.params[p]))
                     # print('enums',set(self.parameters[p]['enum']))
-
-                    if not set(self.params[p]).issubset(set(self.parameters[p]['enum'])):
-                        # if not self.params[p] in self.parameters[p]['enum']:  # what about multiple values?
-                        # print('subsetting', set(self.params[p]).issubset(set(self.parameters[p]['enum'])))
-                        print(f'STOPPED: {self.params[p]} is not valid value for: {p}')
-                        exit()
+                    # print('type', type(self.params[p]))
+                    if type(self.params[p]) == str:
+                        if self.params[p] not in self.parameters[p]['enum']:
+                            print(f'STOPPED: {self.params[p]} is not valid value for: {p}')
+                            exit()
+                    else: 
+                        if not set(self.params[p]).issubset(set(self.parameters[p]['enum'])):
+                            # if not self.params[p] in self.parameters[p]['enum']:  # what about multiple values?
+                            # print('subsetting', set(self.params[p]).issubset(set(self.parameters[p]['enum'])))
+                            print(f'STOPPED: {self.params[p]} is not valid value for: {p}')
+                            exit()
+                        else:
+                            pass
                 pname = p
                 if self.parameters[p]['type'] == 'array':
                     pname = f'{pname}[]'
